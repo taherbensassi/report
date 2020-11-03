@@ -1,4 +1,4 @@
-package com.ewd.report.controller;
+package com.ewd.report.controller.moderator;
 
 import com.ewd.report.entity.Category;
 import com.ewd.report.service.Interfaces.CategoryService;
