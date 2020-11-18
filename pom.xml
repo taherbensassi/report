@@ -18,6 +18,7 @@
         <java.version>11</java.version>
         <testcontainers.version>1.14.3</testcontainers.version>
         <io.springfox.version>2.7.0</io.springfox.version>
+        <io.jsonwebtoken.version>0.9.1</io.jsonwebtoken.version>
     </properties>
 
     <dependencies>
@@ -135,6 +136,11 @@
             <groupId>io.springfox</groupId>
             <artifactId>springfox-swagger-ui</artifactId>
             <version>${io.springfox.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt</artifactId>
+            <version>${io.jsonwebtoken.version}</version>
         </dependency>
     </dependencies>
 

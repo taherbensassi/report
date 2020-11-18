@@ -27,7 +27,7 @@ public class UserServiceImpl implements UserService {
         User userExists = findByEmail(user.getEmail());
 
         if (userExists != null)
-            // TODO: 17.11.20 change Exception message
+            // TODO: 17.11.20 change Exception message create EntityException
             throw new ResourceNotFoundException("E-mail exist","","");
 
         // encrypt Password
