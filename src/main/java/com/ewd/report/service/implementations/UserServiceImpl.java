@@ -3,12 +3,10 @@ package com.ewd.report.service.implementations;
 
 import com.ewd.report.entity.User;
 import com.ewd.report.exception.ResourceNotFoundException;
-import com.ewd.report.repository.FoundItemRepository;
 import com.ewd.report.repository.UserRepository;
 import com.ewd.report.service.Interfaces.UserService;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
