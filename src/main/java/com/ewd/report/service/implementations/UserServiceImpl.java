@@ -32,6 +32,9 @@ public class UserServiceImpl implements UserService {
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
         String encodedPassword = encoder.encode(user.getPassword());
         user.setPassword(encodedPassword);
+
+
+        //  0 - Email
         user.setEnabled(1);
         user.setRole("ROLE_USER");
 
