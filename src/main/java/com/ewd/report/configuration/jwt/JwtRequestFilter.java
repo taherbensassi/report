@@ -34,17 +34,24 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 
 	// TODO: 30.11.20  change to loadUserByEmail
 	@Override
-	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
+	protected void doFilterInternal(HttpServletRequest request,
+									HttpServletResponse response,
+									FilterChain chain)
 			throws ServletException, IOException {
 
-		final String requestTokenHeader = request.getHeader("Authorization");
+		//log.debug("Authenticating {}", request);
+
+		final String header = request.getHeader("Authorization");
+
 
 		String username = null;
 		String jwtToken = null;
 
 
-		if (requestTokenHeader != null && requestTokenHeader.startsWith("Bearer ")) {
-			jwtToken = requestTokenHeader.substring(7);
+		if (header != null && header.startsWith("Bearer ")) {
+			log.debug("Authenticating {}", header);
+			// cut string
+			jwtToken = header.substring(7);
 			try {
 				username = tokenProvider.getUsernameFromToken(jwtToken);
 			} catch (IllegalArgumentException e) {
@@ -59,7 +66,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 		if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
 
 			UserDetails userDetails = this.jwtUserDetailsServiceImpl.loadUserByUsername(username);
-
+			log.info("userDetails");
 			if (tokenProvider.validateToken(jwtToken, userDetails)) {
 
 				UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(
@@ -69,6 +76,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 				SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
 			}
 		}
+
 		chain.doFilter(request, response);
 	}
 

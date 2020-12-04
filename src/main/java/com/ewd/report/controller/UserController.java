@@ -18,18 +18,14 @@ public class UserController {
 
     private UserService userService;
 
-    public UserController(UserService userService) {
-        this.userService = userService;
+    public UserController(UserService userService) { this.userService = userService; }
 
-    }
-
-    @PostMapping("/create")
+    @PostMapping("/user/create")
     public boolean createAccount(@Valid @RequestBody User user) {
         return userService.createAccount(user);
     }
 
-
-    @PostMapping("/auth")
+    @PostMapping("/user/auth")
     public ResponseEntity<?> authentication(@RequestBody Credentials authenticationRequest) {
         return userService.authentication(authenticationRequest);
     }
@@ -38,7 +34,6 @@ public class UserController {
     public List<User> getAllUsers(){
         return userService.getAllUsers();
     }
-
 
     @DeleteMapping("/user/{id}")
     public void deleteItem(@PathVariable("id") Long id){

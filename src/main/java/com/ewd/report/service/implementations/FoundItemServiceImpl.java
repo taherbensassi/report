@@ -43,8 +43,6 @@ public class FoundItemServiceImpl implements FoundItemService {
 
         // TODO: 04.12.20  update the found item
 
-
-
         foundItemRepository.save(foundItem);
         return true;
     }
