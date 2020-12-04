@@ -16,7 +16,7 @@ import javax.persistence.Id;
 
 /* TODO: 03.11.20 add the user and the category relation */
 @Entity
-@Table(name = "items")
+@Table(name="items")
 @EntityListeners(AuditingEntityListener.class)
 @JsonIgnoreProperties(value = {"createdAt", "updatedAt"},
         allowGetters = true)

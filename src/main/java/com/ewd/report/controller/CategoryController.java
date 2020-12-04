@@ -31,7 +31,6 @@ public class CategoryController {
     @GetMapping("/category/{id}")
     public Category getCategoryById(@PathVariable(value = "id") Long categoryId) {
         return categoryService.getCategoryById(categoryId);
-
     }
 
     @PutMapping("/category/{id}")

@@ -3,7 +3,9 @@ package com.ewd.report.service.implementations;
 
 import com.ewd.report.dto.Credentials;
 import com.ewd.report.dto.JWTToken;
+import com.ewd.report.entity.Category;
 import com.ewd.report.entity.User;
+import com.ewd.report.exception.ResourceNotFoundException;
 import com.ewd.report.repository.UserRepository;
 import com.ewd.report.security.jwt.TokenProvider;
 import com.ewd.report.service.Interfaces.UserService;
@@ -14,6 +16,9 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
+// TODO: 04.12.20  add update
 @Service
 public class UserServiceImpl implements UserService {
 
@@ -36,8 +41,8 @@ public class UserServiceImpl implements UserService {
     @Override
     public boolean createAccount(User user) {
 
-        User userExists = findByEmail(user.getEmail());
-        User usernameExists = findByUsername(user.getUsername());
+        User userExists = userRepository.findByEmail(user.getEmail());
+        User usernameExists = userRepository.findByUsername(user.getUsername());
 
         if (userExists != null)
             throw new PropertyNotFoundException("Email Already Exist : " + user.getEmail());
@@ -64,15 +69,7 @@ public class UserServiceImpl implements UserService {
 
     }
 
-    @Override
-    public User findByEmail(String email) {
-        return userRepository.findByEmail(email);
-    }
 
-    @Override
-    public User findByUsername(String username) {
-        return userRepository.findByUsername(username);
-    }
 
     // TODO: 30.11.20 change to email and username
     @Override
@@ -93,7 +90,25 @@ public class UserServiceImpl implements UserService {
         return ResponseEntity.ok(new JWTToken(token));
     }
 
+    @Override
+    public List<User> getAllUsers() {
+        return userRepository.findAll();
+    }
 
+    @Override
+    public void deleteItem(Long id) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("User", "id", id));
+
+        userRepository.delete(user);
+        ResponseEntity.ok().build();
+    }
+
+    @Override
+    public User getUserById(Long id) {
+        return userRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("User", "id", id));
+    }
 
 
 }
