@@ -51,7 +51,7 @@ public class User {
 
     private Integer enabled;
 
-    @Column(name = "email", nullable = false, unique = true)
+    @Column(name = "username", nullable = false, unique = true)
     @NotEmpty(message = "Please provide a Username")
     private String username;
 
