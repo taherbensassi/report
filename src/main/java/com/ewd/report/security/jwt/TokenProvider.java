@@ -1,8 +1,8 @@
 package com.ewd.report.security.jwt;
 
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
@@ -16,9 +16,10 @@ import java.util.function.Function;
 @Component
 public class TokenProvider implements Serializable {
 
-	private static final long serialVersionUID = -2550185165626007488L;
+	private final Logger log = LoggerFactory.getLogger(TokenProvider.class);
 
-	public static final long JWT_TOKEN_VALIDITY = 5 * 60 * 60;
+	// Token is valid for 1 day
+	private static final long TOKEN_VALIDITY = 999 * 24 * 60 * 60L;
 
 	@Value("${jwt.secret}")
 	private String secret;
@@ -46,19 +47,38 @@ public class TokenProvider implements Serializable {
 
 	public String generateToken(UserDetails userDetails) {
 		Map<String, Object> claims = new HashMap<>();
-		return doGenerateToken(claims, userDetails.getUsername());
+		return createToken(claims, userDetails.getUsername());
 	}
 
 
-	private String doGenerateToken(Map<String, Object> claims, String subject) {
+	private String createToken(Map<String, Object> claims, String subject) {
 
 		return Jwts.builder().setClaims(claims).setSubject(subject).setIssuedAt(new Date(System.currentTimeMillis()))
-				.setExpiration(new Date(System.currentTimeMillis() + JWT_TOKEN_VALIDITY * 1000))
+				.setExpiration(new Date(System.currentTimeMillis() + TOKEN_VALIDITY * 1000))
 				.signWith(SignatureAlgorithm.HS512, secret).compact();
 	}
 
-	public Boolean validateToken(String token, UserDetails userDetails) {
-		final String username = getUsernameFromToken(token);
-		return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
+	public boolean validateToken(String authToken, UserDetails userDetails) {
+		try {
+			final String username = getUsernameFromToken(authToken);
+			return username.equals(userDetails.getUsername()) && !isTokenExpired(authToken);
+		} catch (SignatureException e) {
+			log.info("Invalid JWT signature.");
+			log.trace("Invalid JWT signature trace: {}",
+					e);
+		} catch (MalformedJwtException e) {
+			log.info("Invalid JWT token.");
+			log.trace("Invalid JWT token trace: {}", e);
+		} catch (ExpiredJwtException e) {
+			log.info("Expired JWT token.");
+			log.trace("Expired JWT token trace: {}", e);
+		} catch (UnsupportedJwtException e) {
+			log.info("Unsupported JWT token.");
+			log.trace("Unsupported JWT token trace: {}", e);
+		} catch (IllegalArgumentException e) {
+			log.info("JWT token compact of handler are invalid.");
+			log.trace("JWT token compact of handler are invalid trace: {}", e);
+		}
+		return false;
 	}
 }

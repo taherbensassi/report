@@ -3,6 +3,8 @@ package com.ewd.report.configuration.jwt;
 import com.ewd.report.security.jwt.TokenProvider;
 import com.ewd.report.service.implementations.JwtUserDetailsServiceImpl;
 import io.jsonwebtoken.ExpiredJwtException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -19,6 +21,8 @@ import java.io.IOException;
 @Component
 public class JwtRequestFilter extends OncePerRequestFilter {
 
+	private final Logger log = LoggerFactory.getLogger(JwtRequestFilter.class);
+
 	private final JwtUserDetailsServiceImpl jwtUserDetailsServiceImpl;
 
 	private final TokenProvider tokenProvider;
@@ -28,6 +32,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 		this.tokenProvider = tokenProvider;
 	}
 
+	// TODO: 30.11.20  change to loadUserByEmail
 	@Override
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
 			throws ServletException, IOException {
@@ -43,14 +48,14 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 			try {
 				username = tokenProvider.getUsernameFromToken(jwtToken);
 			} catch (IllegalArgumentException e) {
-				System.out.println("Unable to get JWT Token");
+				log.info("Unable JWT");
 			} catch (ExpiredJwtException e) {
-				System.out.println("JWT Token has expired");
+				log.info("JWT ExpiredJwtException");
 			}
 		} else {
-			logger.warn("JWT Token does not begin with Bearer String");
+			logger.info("JWT Token does not begin with Bearer String");
 		}
-
+		// TODO: 30.11.20  change to loadUserByEmail
 		if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
 
 			UserDetails userDetails = this.jwtUserDetailsServiceImpl.loadUserByUsername(username);
