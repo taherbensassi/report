@@ -9,13 +9,16 @@ import com.ewd.report.exception.ResourceNotFoundException;
 import com.ewd.report.repository.UserRepository;
 import com.ewd.report.security.jwt.TokenProvider;
 import com.ewd.report.service.Interfaces.UserService;
+import net.minidev.json.JSONObject;
 import org.hibernate.PropertyNotFoundException;
+import org.hibernate.mapping.Map;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.*;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
 
 // TODO: 04.12.20  add update
@@ -32,7 +35,7 @@ public class UserServiceImpl implements UserService {
 
     public UserServiceImpl(UserRepository userRepository, AuthenticationManager authenticationManager, AuthenticationManager authenticationManager1, TokenProvider tokenProvider, JwtUserDetailsServiceImpl userDetailsService) {
         this.userRepository = userRepository;
-        this.authenticationManager = authenticationManager1;
+        this.authenticationManager = authenticationManager;
         this.tokenProvider = tokenProvider;
         this.userDetailsService = userDetailsService;
     }
@@ -48,7 +51,7 @@ public class UserServiceImpl implements UserService {
             throw new PropertyNotFoundException("Email Already Exist : " + user.getEmail());
 
         if (usernameExists != null)
-            throw new PropertyNotFoundException("Username Already Exist : " + user.getEmail());
+            throw new PropertyNotFoundException("Username Already Exist : " + user.getUsername());
 
         // encrypt Password
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
@@ -56,10 +59,10 @@ public class UserServiceImpl implements UserService {
         user.setPassword(encodedPassword);
 
 
+
         //  0 - Email
         user.setEnabled(1);
         user.setRole("ROLE_USER");
-
         try {
             userRepository.save(user);
             return true;
@@ -85,9 +88,20 @@ public class UserServiceImpl implements UserService {
         final UserDetails userDetails = userDetailsService
                 .loadUserByUsername(authenticationRequest.getUsername());
 
+
         final String token = tokenProvider.generateToken(userDetails);
 
-        return ResponseEntity.ok(new JWTToken(token));
+        String roles = "ROLE_USER";
+        if(userDetails.getUsername().equals("moderator")){
+              roles = "ROLE_MODERATOR";
+        }
+
+
+        JSONObject result = new JSONObject();
+        result.put("token", token);
+        result.put("role", roles);
+        result.put("username", userDetails.getUsername());
+        return  ResponseEntity.ok(result);
     }
 
     @Override

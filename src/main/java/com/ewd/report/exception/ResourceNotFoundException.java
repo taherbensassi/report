@@ -28,4 +28,9 @@ public class ResourceNotFoundException extends RuntimeException {
     public Object getFieldValue() {
         return fieldValue;
     }
+
+
+    public String NotFounMessage() {
+       return "Not Data was Found";
+    }
 }

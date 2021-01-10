@@ -1,11 +1,13 @@
 package com.ewd.report.service.implementations;
 
-import com.ewd.report.entity.Category;
 import com.ewd.report.entity.FoundItem;
 import com.ewd.report.entity.User;
 import com.ewd.report.exception.ResourceNotFoundException;
+import com.ewd.report.repository.CategoryRepository;
 import com.ewd.report.repository.FoundItemRepository;
 import com.ewd.report.service.Interfaces.FoundItemService;
+import javassist.NotFoundException;
+import lombok.SneakyThrows;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import java.util.List;
@@ -14,9 +16,11 @@ import java.util.List;
 public class FoundItemServiceImpl implements FoundItemService {
 
     private FoundItemRepository foundItemRepository;
+    private CategoryRepository categoryRepository;
 
-    public FoundItemServiceImpl(FoundItemRepository foundItemRepository) {
+    public FoundItemServiceImpl(FoundItemRepository foundItemRepository,CategoryRepository categoryRepository) {
         this.foundItemRepository = foundItemRepository;
+        this.categoryRepository = categoryRepository;
     }
 
     public List<FoundItem> getAllFoundItems() {
@@ -25,7 +29,9 @@ public class FoundItemServiceImpl implements FoundItemService {
 
     @Override
     public FoundItem postItem(FoundItem foundItem) {
+
         foundItem.setStatus(0);
+
         return foundItemRepository.save(foundItem);
     }
 
@@ -56,4 +62,17 @@ public class FoundItemServiceImpl implements FoundItemService {
         ResponseEntity.ok().build();
 
     }
+
+    @SneakyThrows
+    @Override
+    public List<FoundItem> getItemByUser(User user) {
+
+        List<FoundItem> foundItems = foundItemRepository.findByUser(user);
+        if(foundItems.isEmpty()){
+            throw new NotFoundException("No Items was Found");
+        }
+        return  foundItems;
+    }
+
+
 }

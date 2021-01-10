@@ -1,6 +1,7 @@
 package com.ewd.report.controller;
 
 import com.ewd.report.entity.FoundItem;
+import com.ewd.report.entity.User;
 import com.ewd.report.service.Interfaces.FoundItemService;
 import org.springframework.web.bind.annotation.*;
 
@@ -40,5 +41,11 @@ public class FoundItemController {
     @DeleteMapping("/item/{id}")
     public void deleteItem(@PathVariable("id") Long id){
         foundItemService.deleteItem(id);
+    }
+
+
+    @GetMapping("/item-user/{user}")
+    public List<FoundItem> getItemByUser(@PathVariable(value = "user") User user) {
+        return  foundItemService.getItemByUser(user);
     }
 }

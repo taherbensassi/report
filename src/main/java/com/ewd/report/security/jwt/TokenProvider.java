@@ -1,5 +1,7 @@
 package com.ewd.report.security.jwt;
 
+import com.ewd.report.entity.User;
+import com.ewd.report.repository.UserRepository;
 import io.jsonwebtoken.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,6 +26,17 @@ public class TokenProvider implements Serializable {
 	@Value("${jwt.secret}")
 	private String secret;
 
+	private  UserRepository userRepository;
+
+	public TokenProvider(UserRepository userRepository ) {
+		this.userRepository = userRepository;
+
+	}
+	public User getIdFromUsername(UserDetails userDetails) {
+		return userRepository.findByUsername(userDetails.getUsername());
+
+	}
+
 	public String getUsernameFromToken(String token) {
 		return getClaimFromToken(token, Claims::getSubject);
 	}
@@ -47,15 +60,18 @@ public class TokenProvider implements Serializable {
 
 	public String generateToken(UserDetails userDetails) {
 		Map<String, Object> claims = new HashMap<>();
-		return createToken(claims, userDetails.getUsername());
+		return createToken(claims, userDetails.getUsername(),getIdFromUsername(userDetails));
 	}
 
 
-	private String createToken(Map<String, Object> claims, String subject) {
+	private String createToken(Map<String, Object> claims, String subject, User user) {
 
 		return Jwts.builder().setClaims(claims).setSubject(subject).setIssuedAt(new Date(System.currentTimeMillis()))
 				.setExpiration(new Date(System.currentTimeMillis() + TOKEN_VALIDITY * 1000))
-				.signWith(SignatureAlgorithm.HS512, secret).compact();
+				.signWith(SignatureAlgorithm.HS512, secret)
+				.claim("ROLE", user.getRole())
+				.claim("userId",user.getId())
+				.compact();
 	}
 
 	public boolean validateToken(String authToken, UserDetails userDetails) {

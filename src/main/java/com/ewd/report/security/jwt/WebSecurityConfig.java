@@ -2,6 +2,7 @@ package com.ewd.report.security.jwt;
 
 import com.ewd.report.configuration.jwt.JwtAuthenticationEntryPoint;
 import com.ewd.report.configuration.jwt.JwtRequestFilter;
+import com.ewd.report.service.implementations.JwtUserDetailsServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -12,7 +13,6 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
@@ -22,21 +22,18 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
-	private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
+	@Autowired
+	private JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
 
-	private final UserDetailsService jwtUserDetailsService;
+	@Autowired
+	private JwtUserDetailsServiceImpl jwtUserDetailsServiceImpl;
 
-	private final JwtRequestFilter jwtRequestFilter;
-
-	public WebSecurityConfig(JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint, UserDetailsService jwtUserDetailsService, JwtRequestFilter jwtRequestFilter) {
-		this.jwtAuthenticationEntryPoint = jwtAuthenticationEntryPoint;
-		this.jwtUserDetailsService = jwtUserDetailsService;
-		this.jwtRequestFilter = jwtRequestFilter;
-	}
+	@Autowired
+	private JwtRequestFilter jwtRequestFilter;
 
 	@Autowired
 	public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
-		auth.userDetailsService(jwtUserDetailsService).passwordEncoder(passwordEncoder());
+		auth.userDetailsService(jwtUserDetailsServiceImpl).passwordEncoder(passwordEncoder());
 	}
 
 	@Bean
@@ -50,15 +47,23 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		return super.authenticationManagerBean();
 	}
 
-	// TODO: 30.11.20 change to paths
 	@Override
 	protected void configure(HttpSecurity httpSecurity) throws Exception {
+		// We don't need CSRF for this example
 		httpSecurity.csrf().disable()
-				.authorizeRequests().antMatchers("/**").permitAll().
-				anyRequest().authenticated().and().
-				exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntryPoint).and().sessionManagement()
+				.cors().and()
+				// dont authenticate this particular request
+				.authorizeRequests().antMatchers("/api/user/create", "/api/user/auth").permitAll().
+				// all other requests need to be authenticated
+						anyRequest().authenticated().and().
+				// make sure we use stateless session; session won't be used to
+				// store user's state.
+						exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntryPoint).and().sessionManagement()
 				.sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
+		// Add a filter to validate the tokens with every request
 		httpSecurity.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
 	}
+
+
 }

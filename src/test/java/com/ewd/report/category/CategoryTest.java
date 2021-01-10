@@ -13,9 +13,5 @@ public class CategoryTest {
     @Autowired
     CategoryRepository categoryRepository;
 
-    @Test
-    public void testCreateCategory(){
-        Category category= new Category("Smartphone");
-        categoryRepository.save(category);
-    }
+
 }

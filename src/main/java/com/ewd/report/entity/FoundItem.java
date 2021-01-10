@@ -49,7 +49,6 @@ public class FoundItem {
     @NotBlank
     private String city;
 
-    @NotBlank
     private String image;
 
     private String addressAdditionalInformation;
@@ -65,8 +64,46 @@ public class FoundItem {
 
     private String additionalInformation;
 
+
+
     @ManyToOne
     private Category category;
+
+    @ManyToOne
+    private User user;
+
+    public FoundItem() {
+    }
+
+    public FoundItem( @NotBlank String name, @NotBlank String address, Integer zip, @NotBlank String city, String addressAdditionalInformation, @NotBlank String brand, Date dateFound, Time timeFound, String color, String additionalInformation) {
+        this.name = name;
+        this.address = address;
+        this.zip = zip;
+        this.city = city;
+        this.addressAdditionalInformation = addressAdditionalInformation;
+        this.brand = brand;
+        this.dateFound = dateFound;
+        this.timeFound = timeFound;
+        this.color = color;
+        this.additionalInformation = additionalInformation;
+    }
+
+    @Override
+    public String toString() {
+        return "FoundItem{" +
+                "name='" + name + '\'' +
+                ", address='" + address + '\'' +
+                ", zip=" + zip +
+                ", city='" + city + '\'' +
+                ", addressAdditionalInformation='" + addressAdditionalInformation + '\'' +
+                ", brand='" + brand + '\'' +
+                ", dateFound=" + dateFound +
+                ", timeFound=" + timeFound +
+                ", color='" + color + '\'' +
+                ", additionalInformation='" + additionalInformation + '\'' +
+                ", category=" + category +
+                '}';
+    }
 
     public Long getId() {
         return id;
@@ -179,4 +216,15 @@ public class FoundItem {
     public Integer getStatus() { return status; }
 
     public void setStatus(Integer status) { this.status = status; }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+
+
 }
