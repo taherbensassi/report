@@ -47,7 +47,21 @@ public class FoundItemServiceImpl implements FoundItemService {
         FoundItem foundItem = foundItemRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Item", "id", id));
 
-        // TODO: 04.12.20  update the found item
+        // Update
+        foundItem.setName(foundItemDetails.getName());
+        foundItem.setAddress(foundItemDetails.getAddress());
+        foundItem.setAdditionalInformation(foundItemDetails.getAdditionalInformation());
+        foundItem.setAddressAdditionalInformation(foundItemDetails.getAddressAdditionalInformation());
+        foundItem.setCity(foundItemDetails.getCity());
+        foundItem.setBrand(foundItemDetails.getBrand());
+        foundItem.setColor(foundItemDetails.getColor());
+        foundItem.setCategory(foundItemDetails.getCategory());
+        foundItem.setUser(foundItemDetails.getUser());
+        foundItem.setImage(foundItemDetails.getImage());
+        foundItem.setTimeFound(foundItemDetails.getTimeFound());
+        foundItem.setDateFound(foundItemDetails.getDateFound());
+        foundItem.setZip(foundItemDetails.getZip());
+
 
         foundItemRepository.save(foundItem);
         return true;

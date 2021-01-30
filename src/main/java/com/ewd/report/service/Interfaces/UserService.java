@@ -2,6 +2,7 @@ package com.ewd.report.service.Interfaces;
 
 import com.ewd.report.dto.Credentials;
 import com.ewd.report.entity.Category;
+import com.ewd.report.entity.FoundItem;
 import com.ewd.report.entity.User;
 import org.springframework.http.ResponseEntity;
 
@@ -18,4 +19,6 @@ public interface UserService {
     void deleteItem(Long id);
 
     User getUserById(Long id);
+
+    Boolean updateUser(User user, Long id);
 }

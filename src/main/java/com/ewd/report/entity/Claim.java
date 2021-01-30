@@ -24,5 +24,65 @@ public class Claim {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @ManyToOne
+    private User user;
 
+    @ManyToOne
+    private FoundItem foundItem;
+
+    private String message;
+
+    private Integer status;
+
+    private Integer returned;
+
+    private Integer assigned;
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public FoundItem getFoundItem() {
+        return foundItem;
+    }
+
+    public void setFoundItem(FoundItem foundItem) {
+        this.foundItem = foundItem;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
+    }
+
+    public Integer getStatus() {
+        return status;
+    }
+
+    public void setStatus(Integer status) {
+        this.status = status;
+    }
+
+    public Integer getReturned() {
+        return returned;
+    }
+
+    public void setReturned(Integer returned) {
+        this.returned = returned;
+    }
+
+    public Integer getAssigned() {
+        return assigned;
+    }
+
+    public void setAssigned(Integer assigned) {
+        this.assigned = assigned;
+    }
 }

@@ -69,6 +69,7 @@ public class TokenProvider implements Serializable {
 		return Jwts.builder().setClaims(claims).setSubject(subject).setIssuedAt(new Date(System.currentTimeMillis()))
 				.setExpiration(new Date(System.currentTimeMillis() + TOKEN_VALIDITY * 1000))
 				.signWith(SignatureAlgorithm.HS512, secret)
+				// Risk
 				.claim("ROLE", user.getRole())
 				.claim("userId",user.getId())
 				.compact();

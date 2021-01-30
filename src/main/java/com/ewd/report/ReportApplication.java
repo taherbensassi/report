@@ -27,7 +27,7 @@ import java.util.List;
 public class ReportApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(ReportApplication.class, args);
+        SpringApplication. run(ReportApplication.class, args);
     }
 
 
@@ -38,13 +38,13 @@ public class ReportApplication {
 
 
             // search movies by `genre`
-            FoundItemSpecification msGenre = new FoundItemSpecification();
-            msGenre.add(new SearchCriteria("name", "iphone", SearchOperation.EQUAL));
-            List<FoundItem> msGenreList = foundItemRepository.findAll(msGenre);
-            msGenreList.forEach(System.out::println);
+            FoundItemSpecification test = new FoundItemSpecification();
+            test.add(new SearchCriteria("name", "iphone", SearchOperation.EQUAL));
+            List<FoundItem> testList = foundItemRepository.findAll(test);
+            testList.forEach(System.out::println);
             System.out.println("Test");
-            System.out.println(Arrays.toString(msGenreList.toArray()));
-            System.out.println("Address:" +msGenreList);
+            System.out.println(Arrays.toString(testList.toArray()));
+            System.out.println("Address:" +testList);
 
 
         };

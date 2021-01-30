@@ -4,6 +4,7 @@ package com.ewd.report.service.implementations;
 import com.ewd.report.dto.Credentials;
 import com.ewd.report.dto.JWTToken;
 import com.ewd.report.entity.Category;
+import com.ewd.report.entity.FoundItem;
 import com.ewd.report.entity.User;
 import com.ewd.report.exception.ResourceNotFoundException;
 import com.ewd.report.repository.UserRepository;
@@ -72,9 +73,6 @@ public class UserServiceImpl implements UserService {
 
     }
 
-
-
-    // TODO: 30.11.20 change to email and username
     @Override
     public ResponseEntity<?> authentication(Credentials authenticationRequest) {
 
@@ -95,7 +93,6 @@ public class UserServiceImpl implements UserService {
         if(userDetails.getUsername().equals("moderator")){
               roles = "ROLE_MODERATOR";
         }
-
 
         JSONObject result = new JSONObject();
         result.put("token", token);
@@ -122,6 +119,27 @@ public class UserServiceImpl implements UserService {
     public User getUserById(Long id) {
         return userRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("User", "id", id));
+    }
+
+    @Override
+    public Boolean updateUser(User userDetails, Long id) {
+        User userFound = userRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Item", "id", id));
+
+        // Update
+        userFound.setEmail(userDetails.getEmail());
+        userFound.setFirstName(userDetails.getFirstName());
+        userFound.setLastName(userDetails.getLastName());
+        userFound.setRole(userDetails.getRole());
+        userFound.setEnabled(userDetails.getEnabled());
+
+        // encrypt Password
+        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+        String encodedPassword = encoder.encode(userDetails.getPassword());
+        userFound.setPassword(encodedPassword);
+
+        userRepository.save(userFound);
+        return true;
     }
 
 

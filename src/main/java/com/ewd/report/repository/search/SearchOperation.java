@@ -1,7 +1,6 @@
 package com.ewd.report.repository.search;
 
 public enum SearchOperation {
-
     GREATER_THAN,
     LESS_THAN,
     GREATER_THAN_EQUAL,
@@ -13,5 +12,4 @@ public enum SearchOperation {
     MATCH_END,
     IN,
     NOT_IN
-
 }

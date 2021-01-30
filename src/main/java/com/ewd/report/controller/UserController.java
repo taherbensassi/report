@@ -44,4 +44,10 @@ public class UserController {
     public User getUserById(@PathVariable(value = "id") Long id) {
         return userService.getUserById(id);
     }
+
+
+    @PutMapping("/item/{id}")
+    public boolean updateUser(@Valid @RequestBody User user, @PathVariable("id") Long id){
+        return userService.updateUser(user, id);
+    }
 }

@@ -2,10 +2,13 @@ package com.ewd.report.security.jwt;
 
 import com.ewd.report.configuration.jwt.JwtAuthenticationEntryPoint;
 import com.ewd.report.configuration.jwt.JwtRequestFilter;
+import com.ewd.report.configuration.jwt.SimpleCORSFilter;
 import com.ewd.report.service.implementations.JwtUserDetailsServiceImpl;
+import org.springframework.beans.factory.BeanInitializationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -13,23 +16,33 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+
 
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
-	@Autowired
-	private JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
 
-	@Autowired
-	private JwtUserDetailsServiceImpl jwtUserDetailsServiceImpl;
+	private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
 
-	@Autowired
-	private JwtRequestFilter jwtRequestFilter;
+	private final JwtUserDetailsServiceImpl jwtUserDetailsServiceImpl;
+
+	private final JwtRequestFilter jwtRequestFilter;
+
+	private final SimpleCORSFilter corsFilter;
+
+	public WebSecurityConfig(JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint, JwtUserDetailsServiceImpl jwtUserDetailsServiceImpl, JwtRequestFilter jwtRequestFilter, SimpleCORSFilter corsFilter) {
+		this.jwtAuthenticationEntryPoint = jwtAuthenticationEntryPoint;
+		this.jwtUserDetailsServiceImpl = jwtUserDetailsServiceImpl;
+		this.jwtRequestFilter = jwtRequestFilter;
+		this.corsFilter = corsFilter;
+	}
+
 
 	@Autowired
 	public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
@@ -47,23 +60,24 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		return super.authenticationManagerBean();
 	}
 
+
 	@Override
-	protected void configure(HttpSecurity httpSecurity) throws Exception {
-		// We don't need CSRF for this example
-		httpSecurity.csrf().disable()
-				.cors().and()
-				// dont authenticate this particular request
-				.authorizeRequests().antMatchers("/api/user/create", "/api/user/auth").permitAll().
-				// all other requests need to be authenticated
-						anyRequest().authenticated().and().
+	protected void configure(HttpSecurity http) throws Exception {
+		http.addFilterBefore(corsFilter, UsernamePasswordAuthenticationFilter.class).exceptionHandling()
+				.and().csrf().disable()
+				.headers().frameOptions().disable().and().sessionManagement()
+				.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+				.and().authorizeRequests()
+				.antMatchers(HttpMethod.POST, "/api/user/create").permitAll()
+				.antMatchers(HttpMethod.POST, "/api/user/auth").permitAll()
+				.anyRequest().authenticated().and().
 				// make sure we use stateless session; session won't be used to
 				// store user's state.
 						exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntryPoint).and().sessionManagement()
 				.sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
 		// Add a filter to validate the tokens with every request
-		httpSecurity.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
+		http.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
 	}
-
 
 }
