@@ -12,6 +12,7 @@ import javax.persistence.criteria.Root;
 import java.util.ArrayList;
 import java.util.List;
 
+// this is search is from tutorial
 public class FoundItemSpecification implements Specification<FoundItem> {
 
 	private List<SearchCriteria> list;

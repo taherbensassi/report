@@ -34,10 +34,6 @@ public class ReportApplication {
     @Bean
     public CommandLineRunner specificationsDemo(FoundItemRepository foundItemRepository) {
         return args -> {
-
-
-
-            // search movies by `genre`
             FoundItemSpecification test = new FoundItemSpecification();
             test.add(new SearchCriteria("name", "iphone", SearchOperation.EQUAL));
             List<FoundItem> testList = foundItemRepository.findAll(test);
@@ -45,8 +41,6 @@ public class ReportApplication {
             System.out.println("Test");
             System.out.println(Arrays.toString(testList.toArray()));
             System.out.println("Address:" +testList);
-
-
         };
     }
 

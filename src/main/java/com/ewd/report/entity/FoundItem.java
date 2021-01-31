@@ -49,6 +49,9 @@ public class FoundItem {
     @NotBlank
     private String city;
 
+    @NotBlank
+    private String country;
+
     private String image;
 
     private String addressAdditionalInformation;
@@ -76,7 +79,7 @@ public class FoundItem {
     public FoundItem() {
     }
 
-    public FoundItem( @NotBlank String name, @NotBlank String address, Integer zip, @NotBlank String city, String addressAdditionalInformation, @NotBlank String brand, Date dateFound, Time timeFound, String color, String additionalInformation) {
+    public FoundItem( @NotBlank String name, @NotBlank String address, Integer zip, @NotBlank String city,@NotBlank String country, String addressAdditionalInformation, @NotBlank String brand, Date dateFound, Time timeFound, String color, String additionalInformation) {
         this.name = name;
         this.address = address;
         this.zip = zip;
@@ -87,6 +90,7 @@ public class FoundItem {
         this.timeFound = timeFound;
         this.color = color;
         this.additionalInformation = additionalInformation;
+        this.country = country;
     }
 
     @Override
@@ -232,5 +236,13 @@ public class FoundItem {
 
     public void setReturned(Integer returned) {
         this.returned = returned;
+    }
+
+    public String getCountry() {
+        return country;
+    }
+
+    public void setCountry(String country) {
+        this.country = country;
     }
 }

@@ -9,6 +9,6 @@ import java.util.Map;
 
 public interface SearchService {
 
-    Map<String, String> search(FoundItem foundItem);
+    List<FoundItem> search(FoundItem foundItem);
 
 }
