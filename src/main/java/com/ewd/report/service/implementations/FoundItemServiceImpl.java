@@ -88,5 +88,15 @@ public class FoundItemServiceImpl implements FoundItemService {
         return  foundItems;
     }
 
+    @Override
+    public Boolean confirmReturn(FoundItem foundItemDetails, Long id) {
+        FoundItem foundItem = foundItemRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Found-item", "id", id));
+        foundItem.setReturned(foundItemDetails.getReturned());
+        foundItemRepository.save(foundItem);
+        return true;
+    }
+
+
 
 }

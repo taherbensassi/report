@@ -64,6 +64,7 @@ public class FoundItem {
 
     private String additionalInformation;
 
+    private Integer returned;
 
 
     @ManyToOne
@@ -223,5 +224,13 @@ public class FoundItem {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    public Integer getReturned() {
+        return returned;
+    }
+
+    public void setReturned(Integer returned) {
+        this.returned = returned;
     }
 }

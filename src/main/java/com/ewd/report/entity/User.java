@@ -11,6 +11,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import java.sql.Time;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Table(name = "users",uniqueConstraints=@UniqueConstraint(columnNames={"email"}))
@@ -133,4 +134,6 @@ public class User {
     public void setRole(String role) {
         this.role = role;
     }
+
+
 }

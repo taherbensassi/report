@@ -31,5 +31,43 @@ public class Message {
     @LastModifiedDate
     private Date updatedAt;
 
+    @ManyToOne
+    @JoinColumn(name = "sender")
+    private User sender;
 
+    @ManyToOne
+    @JoinColumn(name = "receiver")
+    private User receiver;
+
+    public User getSender() {
+        return sender;
+    }
+
+    public void setSender(User sender) {
+        this.sender = sender;
+    }
+
+    public User getReceiver() {
+        return receiver;
+    }
+
+    public void setReceiver(User receiver) {
+        this.receiver = receiver;
+    }
+
+    public Date getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(Date createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public Date getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(Date updatedAt) {
+        this.updatedAt = updatedAt;
+    }
 }

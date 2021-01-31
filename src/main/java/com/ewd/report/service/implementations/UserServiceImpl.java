@@ -95,6 +95,7 @@ public class UserServiceImpl implements UserService {
         }
 
         JSONObject result = new JSONObject();
+        // This is only for test and then they will deleted beacuse a lot of change would be made in frontend to let the auth works again
         result.put("token", token);
         result.put("role", roles);
         result.put("username", userDetails.getUsername());

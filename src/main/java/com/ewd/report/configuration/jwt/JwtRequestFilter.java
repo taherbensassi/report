@@ -32,7 +32,6 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 		this.tokenProvider = tokenProvider;
 	}
 
-	// TODO: 30.11.20  change to loadUserByEmail
 	@Override
 	protected void doFilterInternal(HttpServletRequest request,
 									HttpServletResponse response,
@@ -56,7 +55,6 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 		} else {
 			logger.info("JWT Token does not begin with Bearer String");
 		}
-		// TODO: 30.11.20  change to loadUserByEmail
 		if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
 
 			UserDetails userDetails = this.jwtUserDetailsServiceImpl.loadUserByUsername(username);

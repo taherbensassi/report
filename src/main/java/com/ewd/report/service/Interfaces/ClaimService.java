@@ -15,4 +15,9 @@ public interface ClaimService {
     Boolean updateClaim(Claim claim, Long id);
 
     void deleteClaim(Long id);
+
+    Boolean confirmClaim(Claim claim, Long id);
+
+    Boolean assignedClaimToModerator(Claim claim, Long id);
+
 }

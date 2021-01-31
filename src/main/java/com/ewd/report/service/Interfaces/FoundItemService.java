@@ -19,4 +19,8 @@ public interface FoundItemService {
     void deleteItem(Long id);
 
     List<FoundItem> getItemByUser(User user);
+
+    Boolean confirmReturn(FoundItem foundItem, Long id);
+
+
 }

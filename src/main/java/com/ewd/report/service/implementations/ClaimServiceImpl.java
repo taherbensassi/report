@@ -58,4 +58,28 @@ public class ClaimServiceImpl implements ClaimService {
         claimRepository.delete(claim);
         ResponseEntity.ok().build();
     }
+
+    @Override
+    public Boolean confirmClaim(Claim claim, Long id) {
+        Claim claimData = claimRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Claim", "id", id));
+        // 0 - init
+        // 1 - confirmed claimed
+        // 2 - Assigned to moderator
+        claimData.setStatus(1);
+        claimRepository.save(claimData);
+        return true;
+    }
+
+    @Override
+    public Boolean assignedClaimToModerator(Claim claim, Long id) {
+        Claim claimData = claimRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Claim", "id", id));
+        // 0 - first time
+        // 1 - confirmed claimed
+        // 2 - Assigned to moderator
+        claimData.setStatus(2);
+        claimRepository.save(claimData);
+        return true;
+    }
 }
