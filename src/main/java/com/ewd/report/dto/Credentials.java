@@ -2,7 +2,6 @@ package com.ewd.report.dto;
 
 import java.io.Serializable;
 
-// TODO: 30.11.20 change to email and username
 public class Credentials implements Serializable {
 
 	private String username;

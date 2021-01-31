@@ -1,17 +1,9 @@
 package com.ewd.report.service.implementations;
 
 import com.ewd.report.entity.Claim;
-import com.ewd.report.entity.FoundItem;
-import com.ewd.report.entity.User;
 import com.ewd.report.exception.ResourceNotFoundException;
-import com.ewd.report.repository.CategoryRepository;
 import com.ewd.report.repository.ClaimRepository;
-import com.ewd.report.repository.FoundItemRepository;
-import com.ewd.report.service.Interfaces.FoundItemService;
 import com.ewd.report.service.Interfaces.ModeratorService;
-import javassist.NotFoundException;
-import lombok.SneakyThrows;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

@@ -1,7 +1,6 @@
 package com.ewd.report.service.implementations;
 
 
-import com.ewd.report.entity.Category;
 import com.ewd.report.entity.Claim;
 import com.ewd.report.exception.ResourceNotFoundException;
 import com.ewd.report.repository.ClaimRepository;

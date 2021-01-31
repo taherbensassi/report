@@ -2,9 +2,6 @@ package com.ewd.report.service.implementations;
 
 
 import com.ewd.report.dto.Credentials;
-import com.ewd.report.dto.JWTToken;
-import com.ewd.report.entity.Category;
-import com.ewd.report.entity.FoundItem;
 import com.ewd.report.entity.User;
 import com.ewd.report.exception.ResourceNotFoundException;
 import com.ewd.report.repository.UserRepository;
@@ -12,14 +9,12 @@ import com.ewd.report.security.jwt.TokenProvider;
 import com.ewd.report.service.Interfaces.UserService;
 import net.minidev.json.JSONObject;
 import org.hibernate.PropertyNotFoundException;
-import org.hibernate.mapping.Map;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.*;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
 import java.util.List;
 
 // TODO: 04.12.20  add update

@@ -39,6 +39,17 @@ public class Message {
     @JoinColumn(name = "receiver")
     private User receiver;
 
+
+
+    private String message;
+
+    private String imageName;
+
+    private String imageUrl;
+
+    private Integer opened;
+
+
     public User getSender() {
         return sender;
     }
@@ -69,5 +80,37 @@ public class Message {
 
     public void setUpdatedAt(Date updatedAt) {
         this.updatedAt = updatedAt;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
+    }
+
+    public String getImageName() {
+        return imageName;
+    }
+
+    public void setImageName(String imageName) {
+        this.imageName = imageName;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
+
+    public Integer getOpened() {
+        return opened;
+    }
+
+    public void setOpened(Integer opened) {
+        this.opened = opened;
     }
 }
