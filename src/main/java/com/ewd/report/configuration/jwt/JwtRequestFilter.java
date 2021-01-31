@@ -48,8 +48,6 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 
 
 		if (header != null && header.startsWith("Bearer ")) {
-			log.debug("Authenticating {}", header);
-			// cut string
 			jwtToken = header.substring(7);
 			username = tokenProvider.getUsernameFromToken(jwtToken);
 		} else {
@@ -59,6 +57,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 
 			UserDetails userDetails = this.jwtUserDetailsServiceImpl.loadUserByUsername(username);
 			log.info("userDetails");
+			//check validity
 			if (tokenProvider.validateToken(jwtToken, userDetails)) {
 
 				UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(

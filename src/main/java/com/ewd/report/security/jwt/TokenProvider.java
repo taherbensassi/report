@@ -70,6 +70,7 @@ public class TokenProvider implements Serializable {
 				.setExpiration(new Date(System.currentTimeMillis() + TOKEN_VALIDITY * 1000))
 				.signWith(SignatureAlgorithm.HS512, secret)
 				// Risk
+				// this would be removed It's only for presentation because a lot of change need to be made in the frontedn
 				.claim("ROLE", user.getRole())
 				.claim("userId",user.getId())
 				.compact();
